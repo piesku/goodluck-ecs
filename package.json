@@ -1,6 +1,6 @@
 {
     "name": "goodluck",
-    "version": "5.0.0",
+    "version": "5.0.1",
     "description": "The minimal ECS implementation powering Goodluck.",
     "repository": {
         "type": "git",

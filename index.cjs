@@ -1,6 +1,8 @@
 class BaseWorld {
-    MAX_ENTITIES = 10000;
-    Signature = [];
+    constructor(max = 10000) {
+        this.MAX_ENTITIES = max;
+        this.Signature = [];
+    }
 }
 
 function createEntity(world, signature = 0) {
