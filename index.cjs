@@ -5,10 +5,10 @@ class BaseWorld {
     }
 }
 
-function createEntity(world, signature = 0) {
+function createEntity(world) {
     for (let i = 0; i < world.MAX_ENTITIES; i++) {
-        if (!world.Signature[i]) {
-            world.Signature[i] = signature;
+        if (i === world.Signature.length || world.Signature[i] === 0) {
+            world.Signature[i] = 0;
             return i;
         }
     }
