@@ -1,22 +1,21 @@
 class BaseWorld {
-    constructor(max = 10000) {
-        this.MAX_ENTITIES = max;
+    constructor() {
         this.Signature = [];
+        this.Graveyard = [];
     }
 }
 
 function createEntity(world) {
-    for (let i = 0; i < world.MAX_ENTITIES; i++) {
-        if (i === world.Signature.length || world.Signature[i] === 0) {
-            world.Signature[i] = 0;
-            return i;
-        }
+    if (world.Graveyard.length > 0) {
+        return world.Graveyard.pop();
     }
-    throw new Error("No more entities available.");
+
+    return world.Signature.push(0) - 1;
 }
 
 function destroyEntity(world, entity) {
     world.Signature[entity] = 0;
+    world.Graveyard.push(entity);
 }
 
 function instantiate(world, blueprint) {
