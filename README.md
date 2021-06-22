@@ -1,6 +1,6 @@
 # goodluck-ecs
 
-This is a minimal implementation of Goodluck's core, useful for benchmarks. Most probably, you're looking for the [Goodluck template repository](https://github.com/piesku/goodluck) instead. The template repo includes is a fully-featured toolkit for creating small browser games. It includes the game loop code, children-aware `instantiate`, and many example components and systems.
+This is a minimal implementation of Goodluck's core, useful for benchmarks. Most probably, you're looking for the [Goodluck template repository](https://github.com/piesku/goodluck) instead. The template repo includes is a fully-featured toolkit for creating small browser games. It includes the game loop code, input handling, and many example components and systems.
 
 ## Usage
 
@@ -13,7 +13,7 @@ const HAS_VELOCITY = 1 << 1;
 
 // 2. Define components storage.
 
-class World extends BaseWorld {
+class World extends WorldImpl {
     Position = [];
     Velocity = [];
 }
@@ -23,14 +23,14 @@ class World extends BaseWorld {
 function position(x = 0, y = 0) {
     return function(world, entity) {
         world.Signature[entity] |= HAS_POSITION;
-        world.Position[entity] = { x, y };
+        world.Position[entity] = {x, y};
     };
 }
 
 function velocity(dx = 0, dy = 0) {
     return function (world, entity) {
       world.Signature[entity] |= HAS_VELOCITY;
-      world.Velocity[entity] = { dx, dy };
+      world.Velocity[entity] = {dx, dy};
     };
 }
 
@@ -39,10 +39,10 @@ function velocity(dx = 0, dy = 0) {
 
 const QUERY_MOVE = HAS_POSITION | HAS_VELOCITY;
 function sys_move(world) {
-    for (let i = 0; i < world.Signature.length; i++) {
-        if ((world.Signature[i] & QUERY_MOVE) === QUERY_MOVE) {
-            let position = world.Position[i];
-            let velocity = world.Velocity[i];
+    for (let entity = 0; entity < world.Signature.length; entity++) {
+        if ((world.Signature[entity] & QUERY_MOVE) === QUERY_MOVE) {
+            let position = world.Position[entity];
+            let velocity = world.Velocity[entity];
             position.x += velocity.dx;
             position.y += velocity.dy;
         }
@@ -53,9 +53,10 @@ function sys_move(world) {
 // 5. Set up the scene.
 
 let world = new World();
-instantiate(world, {
-    Using: [position(1, 2), velocity(3, 4)],
-});
+instantiate(world, [
+    position(1, 2),
+    velocity(3, 4),
+]);
 
 
 // 6. Call the system every frame.

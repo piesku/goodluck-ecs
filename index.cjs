@@ -1,34 +1,33 @@
-class BaseWorld {
-    constructor() {
-        this.Signature = [];
-        this.Graveyard = [];
+class WorldImpl {
+    Signature = [];
+    Graveyard = [];
+
+    CreateEntity() {
+        if (this.Graveyard.length > 0) {
+            return this.Graveyard.pop();
+        }
+
+        // Push a new signature and return its index.
+        return this.Signature.push(0) - 1;
+    }
+
+    DestroyEntity(entity) {
+        this.Signature[entity] = 0;
+        this.Graveyard.push(entity);
     }
 }
 
-function createEntity(world) {
-    if (world.Graveyard.length > 0) {
-        return world.Graveyard.pop();
-    }
-
-    return world.Signature.push(0) - 1;
-}
-
-function destroyEntity(world, entity) {
-    world.Signature[entity] = 0;
-    world.Graveyard.push(entity);
-}
-
+// type Mixin = (world: WorldImpl, entity: number) => void;
+// type Blueprint = Array<Mixin>;
 function instantiate(world, blueprint) {
-    let entity = createEntity(world);
-    for (let mixin of blueprint.Using) {
+    let entity = world.CreateEntity();
+    for (let mixin of blueprint) {
         mixin(world, entity);
     }
     return entity;
 }
 
 module.exports = {
-    BaseWorld,
-    createEntity,
-    destroyEntity,
+    WorldImpl,
     instantiate,
 };
